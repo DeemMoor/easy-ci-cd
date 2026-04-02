@@ -16,8 +16,8 @@ jobs:
 
       - name: Build and push
         run: |
-          docker build -t ghcr.io/deeemmoor/easy-ci-cd:latest .
-          docker push ghcr.io/deeemmoor/easy-ci-cd:latest
+          docker build -t ghcr.io/${{ github.actor }}/easy-ci-cd:latest .
+          docker push ghcr.io/${{ github.actor }}/easy-ci-cd:latest
 
   deploy:
     runs-on: ubuntu-latest
