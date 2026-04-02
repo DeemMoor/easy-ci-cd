@@ -1,0 +1,23 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  tags:
+    - docker
+  script:
+    - docker build -t registry.gitlab.com/dm_webpractik/cicdskill:latest .
+    - docker push registry.gitlab.com/dm_webpractik/cicdskill:latest
+
+deploy:
+  stage: deploy
+  tags:
+    - docker
+  script:
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts
+    - scp $ENV_FILE $SERVER_USER@$SERVER_HOST:~/projects/cicd/.env
+    - ssh $SERVER_USER@$SERVER_HOST "cd ~/projects/cicd && docker compose pull && docker compose up -d"
