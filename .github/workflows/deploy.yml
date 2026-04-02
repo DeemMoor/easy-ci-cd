@@ -16,8 +16,9 @@ jobs:
 
       - name: Build and push
         run: |
-          docker build -t ghcr.io/${{ github.actor }}/easy-ci-cd:latest .
-          docker push ghcr.io/${{ github.actor }}/easy-ci-cd:latest
+          IMAGE=ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/easy-ci-cd:latest
+          docker build -t $IMAGE .
+          docker push $IMAGE
 
   deploy:
     runs-on: ubuntu-latest
