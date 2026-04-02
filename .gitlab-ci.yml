@@ -4,6 +4,7 @@ stages:
 
 build:
   stage: build
+  image: docker:latest
   tags:
     - docker
   script:
@@ -12,6 +13,7 @@ build:
 
 deploy:
   stage: deploy
+  image: alpine:latest
   tags:
     - docker
   script:
