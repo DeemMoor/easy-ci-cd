@@ -1,8 +1,6 @@
 services:
   app:
-    image: registry.gitlab.com/dm_webpractik/cicdskill:latest
+    image: $CI_REGISTRY_IMAGE:latest
     restart: always
     ports:
       - "9000:9000"
-    env_file:
-      - .env
