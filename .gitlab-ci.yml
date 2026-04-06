@@ -46,6 +46,8 @@ test:
   image: $BASE_IMAGE
   tags:
     - docker
+  before_script:
+    - composer install --no-scripts --no-interaction
   script:
     - php vendor/bin/phpunit
   only:
