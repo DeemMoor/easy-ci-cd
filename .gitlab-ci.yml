@@ -1,6 +1,7 @@
 stages:
   - build-base
   - build
+  - test
   - deploy
 
 variables:
@@ -37,6 +38,16 @@ build:
   script:
     - docker build --build-arg BASE_IMAGE=$BASE_IMAGE -t $CI_REGISTRY_IMAGE:latest .
     - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+    - master
+
+test:
+  stage: test
+  image: $BASE_IMAGE
+  tags:
+    - docker
+  script:
+    - php vendor/bin/phpunit
   only:
     - master
 

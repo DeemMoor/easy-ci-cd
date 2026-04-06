@@ -8,6 +8,15 @@
 - `index.php` — выводит "Hello, World!"
 - Зависимости управляются через Composer
 
+## Тесты
+
+PHPUnit 11, конфиг в `phpunit.xml`, тесты в директории `tests/`.
+
+Запуск:
+```bash
+docker run --rm -v $(pwd):/app -w /app php:8.4-fpm php vendor/bin/phpunit
+```
+
 ## Docker
 
 Сборка разделена на два образа.
@@ -22,11 +31,13 @@
 
 ## GitLab CI/CD
 
-Пайплайн состоит из трёх стадий, запускается только на ветке `master`:
+Пайплайн состоит из четырёх стадий, запускается только на ветке `master`:
 
 **build-base** — сборка базового образа из `Dockerfile.base` и публикация в GitLab Registry с тегом `:deps`.
 
 **build** — сборка финального образа из `Dockerfile` на основе базового (`:deps`) и публикация с тегом `:latest`.
+
+**test** — запуск PHPUnit внутри базового образа (`:deps`), в котором уже установлены PHP и все зависимости.
 
 **deploy** — деплой на сервер через `DOCKER_HOST` по SSH. Docker daemon подключается к удалённому серверу напрямую, выполняет `compose pull` → `compose down` → `compose up`. SSH-ключ передаётся через `ssh-agent`.
 
@@ -37,11 +48,13 @@
 
 ## GitHub Actions
 
-Пайплайн состоит из трёх стадий:
+Пайплайн состоит из четырёх стадий:
 
 **build-base** — сборка базового образа из `Dockerfile.base` и публикация в GitHub Container Registry с тегом `:deps`.
 
 **build** — сборка финального образа из `Dockerfile` на основе базового (`:deps`) и публикация с тегом `:latest`.
+
+**test** — запуск PHPUnit внутри базового образа (`:deps`). Выполняется параллельно с `build`, деплой ждёт оба job'а.
 
 **deploy** — заглушка (`echo "Деплой выполнен"`), так как сервер находится в локальной сети и недоступен снаружи.
 
@@ -49,7 +62,6 @@
 - `SSH_PRIVATE_KEY`
 - `SERVER_USER`
 - `SERVER_HOST`
-- `ENV_FILE`
 
 ## Репозитории
 
