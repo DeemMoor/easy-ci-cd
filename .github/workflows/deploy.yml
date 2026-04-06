@@ -46,6 +46,7 @@ jobs:
       - name: Run tests
         run: |
           BASE_IMAGE=ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/easy-ci-cd:deps
+          docker run --rm -v $(pwd):/app -w /app $BASE_IMAGE composer install --no-scripts --no-interaction
           docker run --rm -v $(pwd):/app -w /app $BASE_IMAGE php vendor/bin/phpunit
 
   deploy:
